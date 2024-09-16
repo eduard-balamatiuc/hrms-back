@@ -1,0 +1,22 @@
+# .gitignore file
+
+# Node modules
+node_modules/
+
+# Python virtual environments
+venv/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Docker
+*.log
+docker-compose.override.yml
+.env
+
+# PostgreSQL data
+data/postgres_data/
+
+# MongoDB data
+data/mongodb_data/
