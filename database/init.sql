@@ -46,7 +46,7 @@ ALTER TABLE public.appointments OWNER TO postgres;
 
 CREATE TABLE public.doctor_user (
     id uuid NOT NULL,
-    "IDNP" character varying(50) NOT NULL,
+    "idnp" character varying(50) NOT NULL,
     name character varying(50) NOT NULL,
     surname character varying(50) NOT NULL,
     mail character varying(50) NOT NULL,
@@ -84,7 +84,7 @@ ALTER TABLE public.general_information OWNER TO postgres;
 
 CREATE TABLE public.patient_user (
     id uuid NOT NULL,
-    "IDNP" character varying(50) NOT NULL,
+    "idnp" character varying(50) NOT NULL,
     mail character varying(50) NOT NULL,
     password character varying(255) NOT NULL,
     name character varying(50) NOT NULL,
@@ -113,7 +113,7 @@ COPY public.appointments (id, patient_user_id, doctor_user_id, start_datetime, e
 -- Data for Name: doctor_user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.doctor_user (id, "IDNP", name, surname, mail, password, location, phone, image_uri) FROM stdin;
+COPY public.doctor_user (id, "idnp", name, surname, mail, password, location, phone, image_uri) FROM stdin;
 \.
 
 
@@ -133,7 +133,7 @@ COPY public.general_information (id, patient_user_id, height, weight, blood_type
 -- Data for Name: patient_user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.patient_user (id, "IDNP", mail, password, name, surname, location, phone, image_uri) FROM stdin;
+COPY public.patient_user (id, "idnp", mail, password, name, surname, location, phone, image_uri) FROM stdin;
 \.
 
 

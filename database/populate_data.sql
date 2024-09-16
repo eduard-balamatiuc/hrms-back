@@ -1,11 +1,11 @@
 -- Populate patient_user table
-INSERT INTO public.patient_user (id, "IDNP", mail, password, name, surname, location, phone, image_uri)
+INSERT INTO public.patient_user (id, "idnp", mail, password, name, surname, location, phone, image_uri)
 VALUES
 ('d290f1ee-6c54-4b01-90e6-d701748f0851', '1234567890123', 'john.doe@example.com', 'password123', 'John', 'Doe', '123 Main St, Anytown', 1234567890, 'http://example.com/john_doe.jpg'),
 ('f290f1ee-6c54-4b01-90e6-d701748f0852', '9876543210123', 'jane.smith@example.com', 'password456', 'Jane', 'Smith', '456 Elm St, Othertown', 1987654321, 'http://example.com/jane_smith.jpg');
 
 -- Populate doctor_user table
-INSERT INTO public.doctor_user (id, "IDNP", name, surname, mail, password, location, phone, image_uri)
+INSERT INTO public.doctor_user (id, "idnp", name, surname, mail, password, location, phone, image_uri)
 VALUES
 ('e290f1ee-6c54-4b01-90e6-d701748f0853', '2468101214161', 'Dr. Alice', 'Johnson', 'alice.johnson@hospital.com', 'password789', '789 Health St, MedCity', 1231231234, 'http://example.com/alice_johnson.jpg'),
 ('c290f1ee-6c54-4b01-90e6-d701748f0854', '1357911131517', 'Dr. Bob', 'Williams', 'bob.williams@hospital.com', 'password101', '456 Health St, MedCity', 9876543210, 'http://example.com/bob_williams.jpg');
