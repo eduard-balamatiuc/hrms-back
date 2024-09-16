@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  mongo:
+      image: mongo
+      container_name: HRMS-Mongodb
+      restart: always
+      environment:
+        - MONGO_INITDB_DATABASE=hrms
+      ports:
+        - "27017:27017"
+  postgres:
+    image: postgres:latest
+    container_name: HRMS-Postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/populate_data.sql:/docker-entrypoint-initdb.d/populate_data.sql
