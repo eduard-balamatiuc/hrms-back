@@ -1,5 +1,8 @@
 # HRMS Backend
 ![Tox Check](https://github.com/eduard-balamatiuc/hrms-back/workflows/Tox%20Check/badge.svg)
+![Python Version](https://img.shields.io/badge/python-3.10-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
 
 ## Overview
 
