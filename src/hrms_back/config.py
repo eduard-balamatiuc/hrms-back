@@ -4,8 +4,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-POSTGRES_HOST = os.getenv("POSTGRES_HOST")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT")
-POSTGRES_USER = os.getenv("POSTGRES_USER")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-POSTGRES_DB = os.getenv("POSTGRES_DB")
+def get_env_or_raise(key: str) -> str:
+    """Get an environment variable or raise an exception."""
+    value = os.getenv(key)
+    if value is None:
+        raise ValueError(f"Environment variable {key} is not set")
+    return value
+
+POSTGRES_HOST = get_env_or_raise("POSTGRES_HOST")
+POSTGRES_PORT = get_env_or_raise("POSTGRES_PORT")
+POSTGRES_USER = get_env_or_raise("POSTGRES_USER")
+POSTGRES_PASSWORD = get_env_or_raise("POSTGRES_PASSWORD")
+POSTGRES_DB = get_env_or_raise("POSTGRES_DB")
