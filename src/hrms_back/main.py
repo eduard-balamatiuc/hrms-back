@@ -1,11 +1,13 @@
 import uuid
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
+
 from hrms_back.auth.auth import auth_backend
-from hrms_back.auth.schemas import UserRead, UserCreate
-from hrms_back.auth.manager import get_user_manager
 from hrms_back.auth.database import User
+from hrms_back.auth.manager import get_user_manager
+from hrms_back.auth.schemas import UserCreate, UserRead
 
 # Load environment variables from .env file
 load_dotenv()

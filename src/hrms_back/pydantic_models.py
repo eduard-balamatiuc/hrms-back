@@ -1,14 +1,14 @@
 from datetime import datetime
+from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel, Field
-from enum import Enum
 
 
 class UserRole(str, Enum):
-    PATIENT = 'patient'
-    DOCTOR = 'doctor'
-    ADMIN = 'admin'
+    PATIENT = "patient"
+    DOCTOR = "doctor"
+    ADMIN = "admin"
 
 
 class User(BaseModel):
