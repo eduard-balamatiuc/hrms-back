@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=73.0.1", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hrms-back"
+version = "0.1.0"
+description = "HRMS Backend"
+authors = [{name = "Eduard Balamatiuc", email = "balamatiuc2@gmail.com"},]
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi==0.115.0",
+    "uvicorn[standard]==0.30.6",
+    "pydantic==2.9.0",
+    "asyncpg==0.27.0",
+    "psycopg2-binary==2.9.6",
+    "motor==3.0.0",
+    "python-dotenv==1.0.0",
+    "SQLAlchemy==2.0.18",
+    "alembic==1.7.4",
+    "fastapi-users[redis,sqlalchemy]==13.0.0",
+    "redis==5.0.8",
+    "pymongo==4.1.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "tox==4.11.3",
+    "flake8",
+    "pylint",
+    "black",
+    "isort",
+    "pydocstyle",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["hrms_back*"]
+
+[tool.black]
+line-length = 120
+extend-exclude = "E203, W503, venv"
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = ["D100", "D104", "D205", "D101", "D415"]
+match = "(?!test_).*\\.py"
+
+[tool.pylint]
+ignore = "CVS"
+ignore-patterns = "test_.*?py"
+max-line-length = 120
+extension-pkg-whitelist = "pydantic"
+
+[tool.flake8]
+max-line-length = 120
+exclude = ".tox,*.egg,build,data,venv"
+select = "E,W,F"
+per-file-ignores = "__init__.py:F401"
+ignore = "E203,W503"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py310
+isolated_build = True
+
+[testenv]
+deps =
+    .[dev]
+commands =
+    pylint -E hrms_back
+    flake8 hrms_back
+    black --check --diff hrms_back
+    isort --check --diff hrms_back
+    pydocstyle hrms_back
+"""
