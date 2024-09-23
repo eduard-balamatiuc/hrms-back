@@ -1,6 +1,27 @@
 version: '3'
 
 services:
+  fastapi:
+    build: .
+    container_name: HRMS-FastAPI
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    working_dir: /app
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+    depends_on:
+      - mongo
+      - postgres
+      - redis
+    ports:
+      - "8000:8000"
+
   mongo:
     image: mongo
     container_name: HRMS-Mongodb
@@ -19,6 +40,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./database/populate_data.sql:/docker-entrypoint-initdb.d/populate_data.sql
+
+  redis:
+    image: redis:5.0.8
+    container_name: HRMS-Redis
+    ports:
+      - "6379:6379"
