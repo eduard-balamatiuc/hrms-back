@@ -1,11 +1,12 @@
 import redis.asyncio
-from fastapi_users.authentication import RedisStrategy, AuthenticationBackend, CookieTransport
+from fastapi_users.authentication import AuthenticationBackend, CookieTransport, RedisStrategy
 
 cookie_transport = CookieTransport(cookie_max_age=3600)
 redis = redis.asyncio.from_url("redis://redis:6379", decode_responses=True)
 
 
 def get_redis_strategy() -> RedisStrategy:
+    """Return a RedisStrategy instance."""
     return RedisStrategy(redis, lifetime_seconds=3600)
 
 
