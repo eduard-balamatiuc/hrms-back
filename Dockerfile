@@ -1,23 +1,27 @@
-# Dockerfile
-
 # Use an official Python image
 FROM python:3.10-slim
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements.txt into the container
-COPY requirements.txt .
+# Copy pyproject.toml and install dependencies
+COPY pyproject.toml .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install build dependencies
+RUN pip install build
 
-# Copy the current directory contents into the container at /app
-COPY . .
+# Copy the src directory
+COPY src ./src
 
+# Install dependencies directly from pyproject.toml via pip
+RUN pip install --no-cache-dir .
+
+# Copy the entrypoint script
+COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
-COPY entrypoint.sh ./
+
+# Set the entrypoint
 ENTRYPOINT ["./entrypoint.sh"]
 
 # Command to run the FastAPI application using uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "hrms_back.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

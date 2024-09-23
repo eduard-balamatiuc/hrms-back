@@ -1,8 +1,9 @@
 import uuid
-from fastapi_users import schemas
-from pydantic import Field
 from enum import Enum
 from typing import Optional
+
+from fastapi_users import schemas
+from pydantic import Field
 
 
 class UserRole(str, Enum):
