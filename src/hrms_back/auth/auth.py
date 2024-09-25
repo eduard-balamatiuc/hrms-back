@@ -1,5 +1,9 @@
 import redis.asyncio
 from fastapi_users.authentication import AuthenticationBackend, CookieTransport, RedisStrategy
+from hrms_back.auth.manager import get_user_manager
+from hrms_back.auth.models import User
+from fastapi_users import FastAPIUsers
+import uuid
 
 cookie_transport = CookieTransport(cookie_max_age=3600)
 redis = redis.asyncio.from_url("redis://redis:6379", decode_responses=True)
@@ -16,7 +20,10 @@ auth_backend = AuthenticationBackend(
     get_strategy=get_redis_strategy,
 )
 
-
+fastapi_users = FastAPIUsers[User, uuid.UUID](
+    get_user_manager,
+    [auth_backend],
+)
 """
 class CookieTransport(Transport):
     scheme: APIKeyCookie

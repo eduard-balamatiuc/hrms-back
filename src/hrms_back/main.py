@@ -1,23 +1,15 @@
-import uuid
-
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
 
-from hrms_back.auth.auth import auth_backend
-from hrms_back.auth.database import User
-from hrms_back.auth.manager import get_user_manager
+from hrms_back.auth.auth import auth_backend, fastapi_users
 from hrms_back.auth.schemas import UserCreate, UserRead
+from hrms_back.routes.pacient_routes.router import router as pacient_router
 
 # Load environment variables from .env file
 load_dotenv()
 
-app = FastAPI()
-
-fastapi_users = FastAPIUsers[User, uuid.UUID](
-    get_user_manager,
-    [auth_backend],
-)
+app = FastAPI(debug=True)
 
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
@@ -30,3 +22,6 @@ app.include_router(
     prefix="/auth",
     tags=["auth"],
 )
+
+app.include_router(pacient_router)
+

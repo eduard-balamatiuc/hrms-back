@@ -20,3 +20,5 @@ POSTGRES_PASSWORD = get_env_or_raise("POSTGRES_PASSWORD")
 POSTGRES_DB = get_env_or_raise("POSTGRES_DB")
 
 SECRET_KEY = get_env_or_raise("SECRET_KEY")
+
+MONGO_INITDB_DATABASE = get_env_or_raise("MONGO_INITDB_DATABASE")
