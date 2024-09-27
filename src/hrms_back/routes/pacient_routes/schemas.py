@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel, Field
-
+from uuid import UUID
 
 class BloodType(str, Enum):
     A_POSITIVE = "A+"
@@ -20,8 +20,8 @@ class Gender(str, Enum):
     OTHER = "other"
 
 
-class GeneralLInformation(BaseModel):
-    patient_user_id: str = Field(nullable=False)
+class GeneralLInformationCreate(BaseModel):
+    patient_user_id: UUID = Field(nullable=False)
     height: int
     weight: float
     blood_type: BloodType
