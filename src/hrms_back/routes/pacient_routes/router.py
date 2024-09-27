@@ -8,7 +8,7 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 from hrms_back.models.models import general_information
 from hrms_back.models.schemas import GeneralLInformation
-from hrms_back.auth.models import get_async_session as get_db
+from hrms_back.database import get_async_session
 from uuid import UUID
 
 router = APIRouter(
@@ -25,7 +25,7 @@ async def create_general_information():
 # Insert new general information for a patient
 @router.post("/general_information", response_model=GeneralLInformation, status_code=status.HTTP_201_CREATED)
 async def create_general_information(
-    general_info: GeneralLInformation, db: AsyncSession = Depends(get_db)
+    general_info: GeneralLInformation, db: AsyncSession = Depends(get_async_session)
 ):
     # Ensure date_of_birth is naive (remove timezone information)
     if general_info.date_of_birth.tzinfo is not None:
@@ -48,7 +48,7 @@ async def create_general_information(
 # Update existing general information for a patient
 @router.put("/general_information/{user_id}", response_model=GeneralLInformation)
 async def update_general_information(
-    user_id: UUID, general_info: GeneralLInformation, db: AsyncSession = Depends(get_db)
+    user_id: UUID, general_info: GeneralLInformation, db: AsyncSession = Depends(get_async_session)
 ):
     query = select(general_information).where(general_information.c.user_id == user_id)
     result = await db.execute(query)
@@ -71,7 +71,7 @@ async def update_general_information(
 
 # Get general information for a patient
 @router.get("/general_information/{user_id}", response_model=GeneralLInformation)
-async def get_general_information(user_id: UUID, db: AsyncSession = Depends(get_db)):
+async def get_general_information(user_id: UUID, db: AsyncSession = Depends(get_async_session)):
     query = select(general_information).where(general_information.c.user_id == user_id)
     result = await db.execute(query)
     general_info = result.scalar_one_or_none()  # Use scalar_one_or_none for clearer intent

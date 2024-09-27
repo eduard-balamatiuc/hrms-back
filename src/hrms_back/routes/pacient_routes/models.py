@@ -2,6 +2,8 @@ from sqlalchemy import MetaData, Table, Column, Integer, String, DateTime, Forei
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
+from hrms_back.models.models import user
+
 metadata = MetaData()
 
 general_information = Table(

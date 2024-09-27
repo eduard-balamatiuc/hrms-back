@@ -4,7 +4,8 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, UUIDIDMixin, exceptions, models, schemas
 
-from hrms_back.auth.models import User, get_user_db
+from hrms_back.auth.models import User
+from hrms_back.auth.utils import get_user_db
 from hrms_back.auth.schemas import UserRole
 from hrms_back.config import SECRET_KEY
 
