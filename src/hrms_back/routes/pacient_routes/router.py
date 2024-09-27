@@ -8,7 +8,8 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 from hrms_back.models.models import general_information
 from hrms_back.models.schemas import GeneralLInformation
-from hrms_back.database import get_async_session
+from hrms_back.database.database import get_async_session
+from hrms_back.auth.utils import role_required_from_redis
 from uuid import UUID
 
 router = APIRouter(
@@ -16,10 +17,12 @@ router = APIRouter(
     tags=["general_information"],
 )
 
+
 # Root endpoint that does nothing
 @router.post("/")
-async def create_general_information():
-    return
+async def create_general_information(role: str = Depends(role_required_from_redis("patient"))):
+    print(role)
+    return "This is the general information endpoint"
 
 
 # Insert new general information for a patient

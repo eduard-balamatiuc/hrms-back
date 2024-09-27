@@ -1,18 +1,21 @@
-import secrets
-from typing import Generic, Optional
-
-import redis.asyncio
-
 from fastapi_users import exceptions, models
 from fastapi_users.authentication.strategy.base import Strategy
 from fastapi_users.manager import BaseUserManager
+
+from typing import Generic, Optional
+import secrets
+import redis.asyncio as redis
 import json
+
+from hrms_back.config import REDIS_HOST, REDIS_PORT
+
+redis_async_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
 
 class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID]):
     def __init__(
         self,
-        redis: redis.asyncio.Redis,
+        redis: redis.Redis,
         lifetime_seconds: Optional[int] = None,
         *,
         key_prefix: str = "fastapi_users_token:",
@@ -33,17 +36,18 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
 
         try:
             user_data = json.loads(user_data_json)
-            parsed_id = user_manager.parse_id(user_data["user_id"])
+            parsed_id = await user_manager.parse_id(user_data["user_id"])
+            user = await user_manager.get(parsed_id)
+            if user is None:
+                raise exceptions.UserNotExists()
 
-            # You can access the role from user_data["role"] if needed
-            # role = user_data["role"]
-
-            return await user_manager.get(parsed_id)
-        except (exceptions.UserNotExists, exceptions.InvalidID):
+            return user_data
+        except (json.JSONDecodeError, exceptions.UserNotExists):
             return None
 
     async def write_token(self, user: models.UP) -> str:
         token = secrets.token_urlsafe()
+        print(token, "token when writing")
         user_data = {
             "user_id": str(user.id),
             "role": user.role,
@@ -55,3 +59,7 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
 
     async def destroy_token(self, token: str, user: models.UP) -> None:
         await self.redis.delete(f"{self.key_prefix}{token}")
+
+
+def get_redis_strategy() -> RedisStrategy:
+    return RedisStrategy(redis=redis_async_client, lifetime_seconds=3600)

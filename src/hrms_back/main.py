@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from fastapi_users import FastAPIUsers
 
 from hrms_back.auth.auth import auth_backend, fastapi_users
 from hrms_back.auth.schemas import UserCreate, UserRead

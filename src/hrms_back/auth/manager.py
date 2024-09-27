@@ -1,11 +1,10 @@
 import uuid
-from typing import Optional
+from typing import Optional, Any
 
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, UUIDIDMixin, exceptions, models, schemas
 
 from hrms_back.auth.models import User
-from hrms_back.auth.utils import get_user_db
 from hrms_back.auth.schemas import UserRole
 from hrms_back.config import SECRET_KEY
 
@@ -52,7 +51,6 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         """Send a verification message."""
         print(f"Verification requested for user {user.id}. Verification token: {token}")
 
-
-async def get_user_manager(user_db=Depends(get_user_db)):
-    """Get the user manager."""
-    yield UserManager(user_db)
+    async def parse_id(self, value: Any) -> uuid.UUID:
+        """Parse the ID."""
+        return uuid.UUID(str(value))
