@@ -5,16 +5,12 @@ from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, UUIDIDMixin, exceptions, models, schemas
 
 from hrms_back.auth.models import User
-from hrms_back.auth.schemas import UserRole
-from hrms_back.config import SECRET_KEY
-
-SECRET = SECRET_KEY
-PATIENT = UserRole.patient
+from hrms_back.auth.config import SECRET_KEY, PATIENT
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+    reset_password_token_secret = SECRET_KEY
+    verification_token_secret = SECRET_KEY
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         """Send a welcome message after registration."""

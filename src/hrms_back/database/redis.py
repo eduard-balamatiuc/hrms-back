@@ -7,7 +7,7 @@ import secrets
 import redis.asyncio as redis
 import json
 
-from hrms_back.config import REDIS_HOST, REDIS_PORT
+from hrms_back.config import REDIS_HOST, REDIS_PORT, KEY_PREFIX_REDIS_STRATEGY, USER_ID_REDIS_STRATEGY, ROLE_REDIS_STRATEGY
 
 redis_async_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
@@ -18,7 +18,7 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
         redis: redis.Redis,
         lifetime_seconds: Optional[int] = None,
         *,
-        key_prefix: str = "fastapi_users_token:",
+        key_prefix: str = KEY_PREFIX_REDIS_STRATEGY,
     ):
         self.redis = redis
         self.lifetime_seconds = lifetime_seconds
@@ -36,7 +36,7 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
 
         try:
             user_data = json.loads(user_data_json)
-            parsed_id = await user_manager.parse_id(user_data["user_id"])
+            parsed_id = await user_manager.parse_id(user_data[USER_ID_REDIS_STRATEGY])
             user = await user_manager.get(parsed_id)
             if user is None:
                 raise exceptions.UserNotExists()
@@ -47,10 +47,9 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
 
     async def write_token(self, user: models.UP) -> str:
         token = secrets.token_urlsafe()
-        print(token, "token when writing")
         user_data = {
-            "user_id": str(user.id),
-            "role": user.role,
+            USER_ID_REDIS_STRATEGY: str(user.id),
+            ROLE_REDIS_STRATEGY: user.role,
         }
         await self.redis.set(
             f"{self.key_prefix}{token}", json.dumps(user_data), ex=self.lifetime_seconds

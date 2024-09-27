@@ -2,21 +2,23 @@ from fastapi import Depends, HTTPException, Request
 from fastapi_users.manager import BaseUserManager
 
 from hrms_back.database.redis import get_redis_strategy
-from hrms_back.auth.dependicies import get_user_manager
+from hrms_back.auth.dependencies import get_user_manager
+from hrms_back.auth.config import COOKIE_NAME
+from hrms_back.config import ROLE_REDIS_STRATEGY
 
 
 async def get_role_from_redis(token: str, user_manager: BaseUserManager) -> str:
     try:
         redis_strategy = get_redis_strategy()
         user_data = await redis_strategy.read_token(token, user_manager)
-        return user_data.get("role")
+        return user_data.get(ROLE_REDIS_STRATEGY)
     except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
 def role_required_from_redis(required_role: str):
     async def role_checker(request: Request, user_manager=Depends(get_user_manager)):
-        token = request.cookies.get("fastapiusersauth")
+        token = request.cookies.get(COOKIE_NAME)
         if not token:
             raise HTTPException(status_code=401, detail="Token not found")
 
