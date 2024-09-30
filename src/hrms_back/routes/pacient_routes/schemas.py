@@ -3,6 +3,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 from uuid import UUID
 
+
 class BloodType(str, Enum):
     A_POSITIVE = "A+"
     A_NEGATIVE = "A-"

@@ -7,7 +7,9 @@ import secrets
 import redis.asyncio as redis
 import json
 
-from hrms_back.config import REDIS_HOST, REDIS_PORT, KEY_PREFIX_REDIS_STRATEGY, USER_ID_REDIS_STRATEGY, ROLE_REDIS_STRATEGY
+from hrms_back.config import (REDIS_HOST, REDIS_PORT, KEY_PREFIX_REDIS_STRATEGY,
+                              USER_ID_REDIS_STRATEGY, ROLE_REDIS_STRATEGY)
+
 
 redis_async_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 

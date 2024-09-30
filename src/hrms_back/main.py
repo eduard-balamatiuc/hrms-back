@@ -23,4 +23,3 @@ app.include_router(
 )
 
 app.include_router(pacient_router)
-
