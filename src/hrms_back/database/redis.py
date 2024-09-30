@@ -70,4 +70,5 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
 
 
 def get_redis_strategy() -> RedisStrategy:
+    """Get the Redis strategy instance."""
     return RedisStrategy(redis=redis_async_client, lifetime_seconds=3600)

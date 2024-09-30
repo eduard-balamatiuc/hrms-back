@@ -19,6 +19,7 @@ async def get_role_from_redis(token: str, user_manager: BaseUserManager) -> str:
 
 def role_required_from_redis(required_role: str):
     """Check if the user has the required role."""
+
     async def role_checker(request: Request, user_manager=Depends(get_user_manager)):
         token = request.cookies.get(COOKIE_NAME)
         if not token:
