@@ -9,8 +9,10 @@ from hrms_back.database.database import get_async_session
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    """Get the user database."""
     yield SQLAlchemyUserDatabase(session, User)
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):
+    """Get the user manager."""
     yield UserManager(user_db)

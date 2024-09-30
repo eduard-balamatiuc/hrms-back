@@ -18,9 +18,12 @@ router = APIRouter(
 
 
 @router.post("/", response_model=GeneralLInformationCreate, status_code=status.HTTP_201_CREATED)
-async def create_general_information(general_info: GeneralLInformationCreate,
-                                     db: AsyncSession = Depends(get_async_session),
-                                     role: str = Depends(role_required_from_redis(PATIENT))):
+async def create_general_information(
+    general_info: GeneralLInformationCreate,
+    db: AsyncSession = Depends(get_async_session),
+    role: str = Depends(role_required_from_redis(PATIENT)),
+):
+    """Create general information for a patient."""
     try:
         # Ensure date_of_birth is naive (removing timezone information)
         date_of_birth_naive = (
@@ -47,10 +50,13 @@ async def create_general_information(general_info: GeneralLInformationCreate,
 
 
 @router.put("/{user_id}", response_model=GeneralLInformationCreate)
-async def update_general_information(user_id: UUID,
-                                     general_info: GeneralLInformationCreate,
-                                     db: AsyncSession = Depends(get_async_session),
-                                     role: str = Depends(role_required_from_redis(PATIENT))):
+async def update_general_information(
+    user_id: UUID,
+    general_info: GeneralLInformationCreate,
+    db: AsyncSession = Depends(get_async_session),
+    role: str = Depends(role_required_from_redis(PATIENT)),
+):
+    """Update general information for a patient."""
     query = select(general_information).where(general_information.c.user_id == user_id)
     result = await db.execute(query)
     existing_info = result.fetchone()
@@ -65,12 +71,16 @@ async def update_general_information(user_id: UUID,
     if not existing_info:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="General information not found")
 
-    update_info = general_information.update().where(general_information.c.user_id == user_id).values(
-        height=general_info.height,
-        weight=general_info.weight,
-        blood_type=general_info.blood_type,
-        gender=general_info.gender,
-        date_of_birth=date_of_birth_naive,
+    update_info = (
+        general_information.update()
+        .where(general_information.c.user_id == user_id)
+        .values(
+            height=general_info.height,
+            weight=general_info.weight,
+            blood_type=general_info.blood_type,
+            gender=general_info.gender,
+            date_of_birth=date_of_birth_naive,
+        )
     )
     await db.execute(update_info)
     await db.commit()
@@ -78,9 +88,10 @@ async def update_general_information(user_id: UUID,
 
 
 @router.get("/{user_id}", response_model=GeneralLInformationCreate)
-async def get_general_information(user_id: UUID,
-                                  db: AsyncSession = Depends(get_async_session),
-                                  role: str = Depends(role_required_from_redis(PATIENT))):
+async def get_general_information(
+    user_id: UUID, db: AsyncSession = Depends(get_async_session), role: str = Depends(role_required_from_redis(PATIENT))
+):
+    """Get general information for a patient."""
     try:
         query = select(general_information).where(general_information.c.user_id == user_id)
         result = await db.execute(query)

@@ -7,8 +7,13 @@ import secrets
 import redis.asyncio as redis
 import json
 
-from hrms_back.config import (REDIS_HOST, REDIS_PORT, KEY_PREFIX_REDIS_STRATEGY,
-                              USER_ID_REDIS_STRATEGY, ROLE_REDIS_STRATEGY)
+from hrms_back.config import (
+    REDIS_HOST,
+    REDIS_PORT,
+    KEY_PREFIX_REDIS_STRATEGY,
+    USER_ID_REDIS_STRATEGY,
+    ROLE_REDIS_STRATEGY,
+)
 
 
 redis_async_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
@@ -22,13 +27,15 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
         *,
         key_prefix: str = KEY_PREFIX_REDIS_STRATEGY,
     ):
+        """Create a Redis strategy instance."""
         self.redis = redis
         self.lifetime_seconds = lifetime_seconds
         self.key_prefix = key_prefix
 
     async def read_token(
-            self, token: Optional[str], user_manager: BaseUserManager[models.UP, models.ID]
+        self, token: Optional[str], user_manager: BaseUserManager[models.UP, models.ID]
     ) -> Optional[models.UP]:
+        """Read the token from the database and return the user associated with it."""
         if token is None:
             return None
 
@@ -48,17 +55,17 @@ class RedisStrategy(Strategy[models.UP, models.ID], Generic[models.UP, models.ID
             return None
 
     async def write_token(self, user: models.UP) -> str:
+        """Write the token to the database and return it."""
         token = secrets.token_urlsafe()
         user_data = {
             USER_ID_REDIS_STRATEGY: str(user.id),
             ROLE_REDIS_STRATEGY: user.role,
         }
-        await self.redis.set(
-            f"{self.key_prefix}{token}", json.dumps(user_data), ex=self.lifetime_seconds
-        )
+        await self.redis.set(f"{self.key_prefix}{token}", json.dumps(user_data), ex=self.lifetime_seconds)
         return token
 
     async def destroy_token(self, token: str, user: models.UP) -> None:
+        """Destroy the token."""
         await self.redis.delete(f"{self.key_prefix}{token}")
 
 

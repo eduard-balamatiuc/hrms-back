@@ -8,6 +8,7 @@ from hrms_back.config import ROLE_REDIS_STRATEGY
 
 
 async def get_role_from_redis(token: str, user_manager: BaseUserManager) -> str:
+    """Get the role of the user from Redis."""
     try:
         redis_strategy = get_redis_strategy()
         user_data = await redis_strategy.read_token(token, user_manager)
@@ -17,6 +18,7 @@ async def get_role_from_redis(token: str, user_manager: BaseUserManager) -> str:
 
 
 def role_required_from_redis(required_role: str):
+    """Check if the user has the required role."""
     async def role_checker(request: Request, user_manager=Depends(get_user_manager)):
         token = request.cookies.get(COOKIE_NAME)
         if not token:

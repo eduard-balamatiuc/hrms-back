@@ -6,8 +6,9 @@ from sqlalchemy.orm import sessionmaker
 
 from hrms_back.config import POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USER
 
-DATABASE_URL = (f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:"
-                f"{POSTGRES_PORT}/{POSTGRES_DB}")
+DATABASE_URL = (
+    f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:" f"{POSTGRES_PORT}/{POSTGRES_DB}"
+)
 
 Base = declarative_base()
 
@@ -17,5 +18,6 @@ async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    """Get an async session."""
     async with async_session_maker() as session:
         yield session
