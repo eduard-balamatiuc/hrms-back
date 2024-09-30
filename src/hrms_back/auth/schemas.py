@@ -1,11 +1,11 @@
-from fastapi_users import schemas
-
 import uuid
 from enum import Enum
 from typing import Optional
+
+from fastapi_users import schemas
 from pydantic import Field
 
-from hrms_back.auth.config import PATIENT, DOCTOR, ADMIN
+from hrms_back.auth.config import ADMIN, DOCTOR, PATIENT
 
 
 class UserRole(str, Enum):

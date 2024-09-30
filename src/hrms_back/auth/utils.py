@@ -1,10 +1,10 @@
 from fastapi import Depends, HTTPException, Request
 from fastapi_users.manager import BaseUserManager
 
-from hrms_back.database.redis import get_redis_strategy
-from hrms_back.auth.dependencies import get_user_manager
 from hrms_back.auth.config import COOKIE_NAME
+from hrms_back.auth.dependencies import get_user_manager
 from hrms_back.config import ROLE_REDIS_STRATEGY
+from hrms_back.database.redis import get_redis_strategy
 
 
 async def get_role_from_redis(token: str, user_manager: BaseUserManager) -> str:

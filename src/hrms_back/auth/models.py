@@ -1,5 +1,6 @@
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID
 from sqlalchemy import BigInteger, Boolean, Column, String
+
 from hrms_back.database.database import Base
 
 

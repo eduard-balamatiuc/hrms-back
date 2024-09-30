@@ -1,11 +1,11 @@
 import uuid
-from typing import Optional, Any
+from typing import Any, Optional
 
 from fastapi import Request
 from fastapi_users import BaseUserManager, UUIDIDMixin, exceptions, models, schemas
 
+from hrms_back.auth.config import PATIENT, SECRET_KEY
 from hrms_back.auth.models import User
-from hrms_back.auth.config import SECRET_KEY, PATIENT
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):

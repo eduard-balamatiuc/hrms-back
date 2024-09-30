@@ -1,5 +1,6 @@
-from sqlalchemy import MetaData, Table, Column, Integer, String, DateTime, ForeignKey
 import uuid
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.dialects.postgresql import UUID
 
 from hrms_back.models.models import user
