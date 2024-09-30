@@ -6,7 +6,8 @@ from sqlalchemy.orm import sessionmaker
 
 from hrms_back.config import POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USER
 
-DATABASE_URL = f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+DATABASE_URL = (f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:"
+                f"{POSTGRES_PORT}/{POSTGRES_DB}")
 
 Base = declarative_base()
 

@@ -1,7 +1,3 @@
-# RESTAPI for Pacient routes
-
-# Routes for inserting, updating, getting general_information of a pacient
-
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from sqlalchemy.ext.asyncio import AsyncSession

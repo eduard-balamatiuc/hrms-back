@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional, Any
 
-from fastapi import Depends, Request
+from fastapi import Request
 from fastapi_users import BaseUserManager, UUIDIDMixin, exceptions, models, schemas
 
 from hrms_back.auth.models import User
