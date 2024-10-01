@@ -1,10 +1,10 @@
 from logging.config import fileConfig
 
 from alembic import context
-from models.models import metadata
 from sqlalchemy import engine_from_config, pool
 
-from src.hrms_back.config import POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USER
+from hrms_back.config import POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USER
+from hrms_back.models.models import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

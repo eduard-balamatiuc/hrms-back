@@ -1,42 +1,23 @@
-import redis.asyncio
-from fastapi_users.authentication import AuthenticationBackend, CookieTransport, RedisStrategy
+import uuid
 
-cookie_transport = CookieTransport(cookie_max_age=3600)
-redis = redis.asyncio.from_url("redis://redis:6379", decode_responses=True)
+from fastapi_users import FastAPIUsers
+from fastapi_users.authentication import AuthenticationBackend, CookieTransport
 
+from hrms_back.auth.config import COOKIE, COOKIE_MAX_AGE, COOKIE_NAME
+from hrms_back.auth.dependencies import get_user_manager
+from hrms_back.auth.models import User
+from hrms_back.database.redis import get_redis_strategy
 
-def get_redis_strategy() -> RedisStrategy:
-    """Return a RedisStrategy instance."""
-    return RedisStrategy(redis, lifetime_seconds=3600)
+cookie_transport = CookieTransport(cookie_name=COOKIE_NAME, cookie_max_age=COOKIE_MAX_AGE)
 
 
 auth_backend = AuthenticationBackend(
-    name="cookie",
+    name=COOKIE,
     transport=cookie_transport,
     get_strategy=get_redis_strategy,
 )
 
-
-"""
-class CookieTransport(Transport):
-    scheme: APIKeyCookie
-
-    def __init__(
-        self,
-        cookie_name: str = "fastapiusersauth",
-        cookie_max_age: Optional[int] = None,
-        cookie_path: str = "/",
-        cookie_domain: Optional[str] = None,
-        cookie_secure: bool = True,
-        cookie_httponly: bool = True,
-        cookie_samesite: Literal["lax", "strict", "none"] = "lax",
-    ):
-        self.cookie_name = cookie_name
-        self.cookie_max_age = cookie_max_age  #seconds
-        self.cookie_path = cookie_path
-        self.cookie_domain = cookie_domain
-        self.cookie_secure = cookie_secure
-        self.cookie_httponly = cookie_httponly
-        self.cookie_samesite = cookie_samesite
-        self.scheme = APIKeyCookie(name=self.cookie_name, auto_error=False)
-"""
+fastapi_users = FastAPIUsers[User, uuid.UUID](
+    get_user_manager,
+    [auth_backend],
+)

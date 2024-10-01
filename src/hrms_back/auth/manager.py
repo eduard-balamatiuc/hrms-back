@@ -1,19 +1,16 @@
 import uuid
-from typing import Optional
+from typing import Any, Optional
 
-from fastapi import Depends, Request
+from fastapi import Request
 from fastapi_users import BaseUserManager, UUIDIDMixin, exceptions, models, schemas
 
-from hrms_back.auth.database import User, get_user_db
-from hrms_back.auth.schemas import UserRole
-
-SECRET = "SECRET"
-PATIENT = UserRole.patient
+from hrms_back.auth.config import PATIENT, SECRET_KEY
+from hrms_back.auth.models import User
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+    reset_password_token_secret = SECRET_KEY
+    verification_token_secret = SECRET_KEY
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         """Send a welcome message after registration."""
@@ -50,7 +47,6 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         """Send a verification message."""
         print(f"Verification requested for user {user.id}. Verification token: {token}")
 
-
-async def get_user_manager(user_db=Depends(get_user_db)):
-    """Get the user manager."""
-    yield UserManager(user_db)
+    async def parse_id(self, value: Any) -> uuid.UUID:
+        """Parse the ID."""
+        return uuid.UUID(str(value))

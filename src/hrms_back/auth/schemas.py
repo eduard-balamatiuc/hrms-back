@@ -5,11 +5,13 @@ from typing import Optional
 from fastapi_users import schemas
 from pydantic import Field
 
+from hrms_back.auth.config import ADMIN, DOCTOR, PATIENT
+
 
 class UserRole(str, Enum):
-    patient = "patient"
-    doctor = "doctor"
-    admin = "admin"
+    patient = PATIENT
+    doctor = DOCTOR
+    admin = ADMIN
 
 
 class UserRead(schemas.BaseUser[uuid.UUID]):

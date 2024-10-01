@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir .
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
+# Copy the alembic.ini file
+COPY alembic.ini ./
+
 # Set the entrypoint
 ENTRYPOINT ["./entrypoint.sh"]
 
