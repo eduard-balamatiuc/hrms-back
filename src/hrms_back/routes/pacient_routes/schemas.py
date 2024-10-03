@@ -1,6 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from uuid import UUID
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -29,3 +30,12 @@ class GeneralLInformationCreate(BaseModel):
     blood_type: BloodType
     gender: Gender
     date_of_birth: datetime
+
+
+class GeneralLInformationUpdate(BaseModel):
+    user_id: Optional[UUID] = None
+    height: Optional[int] = None
+    weight: Optional[float] = None
+    blood_type: Optional[BloodType] = None
+    gender: Optional[Gender] = None
+    date_of_birth: Optional[datetime] = None

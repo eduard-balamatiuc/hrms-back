@@ -9,7 +9,7 @@ from hrms_back.auth.config import PATIENT, DOCTOR, ADMIN
 from hrms_back.auth.utils import role_required_from_redis
 from hrms_back.database.database import get_async_session
 from hrms_back.routes.appointment_routes.models import appointment
-from hrms_back.routes.appointment_routes.schemas import AppointmentCreate
+from hrms_back.routes.appointment_routes.schemas import AppointmentCreate, AppointmentUpdate
 
 router = APIRouter(
     prefix="/appointment",
@@ -25,47 +25,45 @@ async def create_appointment(
     role: str = Depends(role_required_from_redis([PATIENT, DOCTOR, ADMIN])),
 ):
     """Create a new appointment."""
-    # try:
-    # Ensure start_time is naive (removing timezone information)
-    start_time_naive = (
-        new_appointment.start_time.astimezone().replace(tzinfo=None)
-        if new_appointment.start_time.tzinfo is not None
-        else new_appointment.start_time
-    )
-    # Ensure end_time is naive (removing timezone information)
-    end_time_naive = (
-        new_appointment.end_time.astimezone().replace(tzinfo=None)
-        if new_appointment.end_time.tzinfo is not None
-        else new_appointment.end_time
-    )
-    new_info = appointment.insert().values(
-        user_id=new_appointment.user_id,
-        doctor_user_id=new_appointment.doctor_user_id,
-        start_time=start_time_naive,
-        end_time=end_time_naive,
-        comments=new_appointment.comments,
-        status=new_appointment.status,
-    )
-    print(role, "role")
-    print(new_appointment, "appointment")
+    try:
+        # Ensure start_time is naive (removing timezone information)
+        start_time_naive = (
+            new_appointment.start_time.astimezone().replace(tzinfo=None)
+            if new_appointment.start_time.tzinfo is not None
+            else new_appointment.start_time
+        )
+        # Ensure end_time is naive (removing timezone information)
+        end_time_naive = (
+            new_appointment.end_time.astimezone().replace(tzinfo=None)
+            if new_appointment.end_time.tzinfo is not None
+            else new_appointment.end_time
+        )
+        new_info = appointment.insert().values(
+            user_id=new_appointment.user_id,
+            doctor_user_id=new_appointment.doctor_user_id,
+            start_time=start_time_naive,
+            end_time=end_time_naive,
+            comments=new_appointment.comments,
+            status=new_appointment.status,
+        )
 
-    await db.execute(new_info)
-    await db.commit()
-    return new_appointment
-    # except Exception:
-    # await db.rollback()
-    # raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred.")
+        await db.execute(new_info)
+        await db.commit()
+        return new_appointment
+    except Exception:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred.")
 
 
 # This is the endpoint that will be used to UPDATE STATUS an appointment available for patient, doctor, admin
 @router.put("/{appointment_id}", response_model=AppointmentCreate, status_code=status.HTTP_200_OK)
-async def update_appointment_status(
-    appointment_id: UUID,
-    appointment_info: AppointmentCreate,
-    db: AsyncSession = Depends(get_async_session),
-    role: str = Depends(role_required_from_redis([PATIENT, DOCTOR, ADMIN])),
+async def update_appointment(
+        appointment_id: UUID,
+        appointment_info: AppointmentUpdate,
+        db: AsyncSession = Depends(get_async_session),
+        role: str = Depends(role_required_from_redis([PATIENT, DOCTOR, ADMIN])),
 ):
-    """Update the status of an appointment."""
+    """Update an appointment."""
     query = select(appointment).where(appointment.c.id == appointment_id)
     result = await db.execute(query)
     existing_appointment = result.fetchone()
@@ -74,16 +72,23 @@ async def update_appointment_status(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Appointment not found")
 
     try:
-        updated_appointment = appointment_info.update().values(
-            status=appointment_info.status,
-        )
+        update_data = appointment_info.dict(exclude_unset=True)
 
-        await db.execute(updated_appointment)
+        # Handle timezone information for start_time and end_time if they're provided
+        if 'start_time' in update_data and update_data['start_time']:
+            update_data['start_time'] = update_data['start_time'].astimezone().replace(tzinfo=None)
+        if 'end_time' in update_data and update_data['end_time']:
+            update_data['end_time'] = update_data['end_time'].astimezone().replace(tzinfo=None)
+
+        update_query = appointment.update().where(appointment.c.id == appointment_id).values(**update_data)
+        await db.execute(update_query)
         await db.commit()
-        return appointment
-    except Exception:
+
+        updated_appointment = await db.execute(select(appointment).where(appointment.c.id == appointment_id))
+        return updated_appointment.fetchone()
+    except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred.")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An error occurred: {str(e)}")
 
 
 # This is the endpoint that will be used to DELETE an appointment available for patient, doctor, admin

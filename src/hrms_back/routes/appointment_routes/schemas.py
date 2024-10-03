@@ -28,3 +28,12 @@ class AppointmentCreate(BaseModel):
     end_time: Optional[datetime] = None
     comments: str = Field(nullable=False)
     status: Status = Status.pending
+
+
+class AppointmentUpdate(BaseModel):
+    user_id: Optional[UUID] = None
+    doctor_user_id: Optional[UUID] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    comments: Optional[str] = None
+    status: Optional[Status] = None
