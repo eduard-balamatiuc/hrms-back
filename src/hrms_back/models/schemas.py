@@ -4,11 +4,19 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from hrms_back.auth.config import PATIENT, DOCTOR, ADMIN
+
 
 class UserRole(str, Enum):
-    PATIENT = "patient"
-    DOCTOR = "doctor"
-    ADMIN = "admin"
+    PATIENT = PATIENT
+    DOCTOR = DOCTOR
+    ADMIN = ADMIN
+
+
+class Status(str, Enum):
+    pending = "pending"
+    accepted = "accepted"
+    rejected = "rejected"
 
 
 class User(BaseModel):
@@ -55,3 +63,4 @@ class Appointment(BaseModel):
     start_time: datetime
     end_time: Optional[datetime] = None
     comments: str = Field(nullable=False)
+    status: Status
