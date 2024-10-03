@@ -23,7 +23,7 @@ class Gender(str, Enum):
 
 
 class GeneralLInformationCreate(BaseModel):
-    patient_user_id: UUID = Field(nullable=False)
+    user_id: UUID = Field(nullable=False)
     height: int
     weight: float
     blood_type: BloodType

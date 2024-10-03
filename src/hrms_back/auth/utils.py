@@ -17,7 +17,7 @@ async def get_role_from_redis(token: str, user_manager: BaseUserManager) -> str:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-def role_required_from_redis(required_role: str):
+def role_required_from_redis(required_role: str or list[str]):
     """Check if the user has the required role."""
 
     async def role_checker(request: Request, user_manager=Depends(get_user_manager)):
@@ -32,8 +32,14 @@ def role_required_from_redis(required_role: str):
         except Exception:
             raise HTTPException(status_code=500, detail="Internal server error")
 
-        if role != required_role:
-            raise HTTPException(status_code=403, detail="Not authorized")
-        return role
+        if isinstance(required_role, list):
+            if role not in required_role:
+                raise HTTPException(status_code=403, detail="Not authorized")
+        else:
+            if role != required_role:
+                raise HTTPException(status_code=403, detail="Not authorized")
+
+        if role in required_role or role == required_role:
+            print(role, "lalalalalalalalalalla")
 
     return role_checker

@@ -32,7 +32,7 @@ async def create_general_information(
         )
 
         new_info = general_information.insert().values(
-            user_id=general_info.patient_user_id,
+            user_id=general_info.user_id,
             height=general_info.height,
             weight=general_info.weight,
             blood_type=general_info.blood_type,
@@ -99,7 +99,7 @@ async def get_general_information(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="General information not found")
 
         return GeneralLInformationCreate(
-            patient_user_id=general_info.user_id,
+            user_id=general_info.user_id,
             height=general_info.height,
             weight=general_info.weight,
             blood_type=general_info.blood_type,

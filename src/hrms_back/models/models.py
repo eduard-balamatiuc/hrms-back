@@ -62,5 +62,5 @@ appointment = Table(
     Column("start_time", DateTime),
     Column("end_time", DateTime),
     Column("comments", String),
-    Column("status", SQLAlchemyEnum(UserRole), nullable=False),
+    Column("status", SQLAlchemyEnum(Status), nullable=False),
 )

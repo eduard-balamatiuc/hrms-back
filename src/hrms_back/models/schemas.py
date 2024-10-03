@@ -49,7 +49,7 @@ class Gender(str, Enum):
 
 
 class GeneralLInformation(BaseModel):
-    patient_user_id: str = Field(nullable=False)
+    user_id: str = Field(nullable=False)
     height: int
     weight: float
     blood_type: BloodType
@@ -58,7 +58,7 @@ class GeneralLInformation(BaseModel):
 
 
 class Appointment(BaseModel):
-    patient_user_id: str = Field(nullable=False)
+    user_id: str = Field(nullable=False)
     doctor_user_id: str = Field(nullable=False)
     start_time: datetime
     end_time: Optional[datetime] = None

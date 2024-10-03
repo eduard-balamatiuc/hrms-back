@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from hrms_back.auth.auth import auth_backend, fastapi_users
 from hrms_back.auth.schemas import UserCreate, UserRead
 from hrms_back.routes.pacient_routes.router import router as pacient_router
+from hrms_back.routes.appointment_routes.router import router as appointment_router
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -23,3 +25,5 @@ app.include_router(
 )
 
 app.include_router(pacient_router)
+
+app.include_router(appointment_router)
