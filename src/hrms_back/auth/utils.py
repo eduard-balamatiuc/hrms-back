@@ -39,7 +39,4 @@ def role_required_from_redis(required_role: str or list[str]):
             if role != required_role:
                 raise HTTPException(status_code=403, detail="Not authorized")
 
-        if role in required_role or role == required_role:
-            print(role, "lalalalalalalalalalla")
-
     return role_checker
