@@ -116,41 +116,21 @@ async def delete_appointment(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred.")
 
 
-# This is the endpoint that will be used to GET all appointments of a DOCTOR,from a starting date available for doctor
-@router.get("/doctor/{doctor_id}/{start_date}/{status_required}", response_model=List[AppointmentCreate], status_code=status.HTTP_200_OK)
-async def get_doctor_appointments(
-        doctor_id: UUID,
-        start_date: Optional[str] = None,
-        status_required: Optional[str] = None,
-        db: AsyncSession = Depends(get_async_session),
-        role: str = Depends(role_required_from_redis(DOCTOR)),
+@router.get("/appointments", response_model=List[AppointmentCreate], status_code=status.HTTP_200_OK)
+async def get_appointments(
+    user_id: UUID,
+    start_date: Optional[str] = None,
+    status_required: Optional[str] = None,
+    db: AsyncSession = Depends(get_async_session),
+    role: str = Depends(role_required_from_redis([PATIENT, DOCTOR, ADMIN])),
 ):
-    """Get all appointments of a doctor, optionally filtered by a starting date and status."""
-    query = select(appointment).where(appointment.c.doctor_user_id == doctor_id)
-
-    if start_date:
-        query = query.where(appointment.c.start_time >= start_date)
-
-    if status_required:
-        query = query.where(appointment.c.status == status_required)
-
-    result = await db.execute(query)
-    appointments = result.fetchall()
-
-    return appointments
-
-
-# This is the endpoint that will be used to GET all appointments of a PATIENT,from a starting date available for doctor
-@router.get("/patient/{patient_id}/{start_date}/{status_required}", response_model=List[AppointmentCreate], status_code=status.HTTP_200_OK)
-async def get_patient_appointments(
-        patient_id: UUID,
-        start_date: Optional[str] = None,
-        status_required: Optional[str] = None,
-        db: AsyncSession = Depends(get_async_session),
-        role: str = Depends(role_required_from_redis(DOCTOR)),
-):
-    """Get all appointments of a patient, optionally filtered by a starting date and status."""
-    query = select(appointment).where(appointment.c.patient_user_id == patient_id)
+    """
+    Get all appointments for a doctor or patient, optionally filtered by start date and status.
+    """
+    if role == DOCTOR:
+        query = select(appointment).where(appointment.c.doctor_user_id == user_id)
+    else:
+        query = select(appointment).where(appointment.c.user_id == user_id)
 
     if start_date:
         query = query.where(appointment.c.start_time >= start_date)
