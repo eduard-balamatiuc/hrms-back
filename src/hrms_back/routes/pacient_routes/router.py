@@ -50,10 +50,10 @@ async def create_general_information(
 
 @router.put("/{user_id}", response_model=GeneralLInformationUpdate)
 async def update_general_information(
-        user_id: UUID,
-        general_info: GeneralLInformationUpdate,
-        db: AsyncSession = Depends(get_async_session),
-        role: str = Depends(role_required_from_redis(PATIENT)),
+    user_id: UUID,
+    general_info: GeneralLInformationUpdate,
+    db: AsyncSession = Depends(get_async_session),
+    role: str = Depends(role_required_from_redis(PATIENT)),
 ):
     """Update general information for a patient."""
     query = select(general_information).where(general_information.c.user_id == user_id)
@@ -66,14 +66,10 @@ async def update_general_information(
     update_data = general_info.dict(exclude_unset=True)
 
     # Handle date_of_birth if it's provided
-    if 'date_of_birth' in update_data and update_data['date_of_birth']:
-        update_data['date_of_birth'] = update_data['date_of_birth'].astimezone().replace(tzinfo=None)
+    if "date_of_birth" in update_data and update_data["date_of_birth"]:
+        update_data["date_of_birth"] = update_data["date_of_birth"].astimezone().replace(tzinfo=None)
 
-    update_info = (
-        general_information.update()
-        .where(general_information.c.user_id == user_id)
-        .values(**update_data)
-    )
+    update_info = general_information.update().where(general_information.c.user_id == user_id).values(**update_data)
 
     try:
         await db.execute(update_info)

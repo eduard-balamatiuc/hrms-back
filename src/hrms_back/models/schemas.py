@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from hrms_back.auth.config import PATIENT, DOCTOR, ADMIN
+from hrms_back.auth.config import ADMIN, DOCTOR, PATIENT
 
 
 class UserRole(str, Enum):

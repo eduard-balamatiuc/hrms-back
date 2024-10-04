@@ -6,7 +6,7 @@ from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy import ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.dialects.postgresql import UUID
 
-from hrms_back.auth.config import PATIENT, DOCTOR, ADMIN
+from hrms_back.auth.config import ADMIN, DOCTOR, PATIENT
 
 metadata = MetaData()
 

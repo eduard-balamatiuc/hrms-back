@@ -1,8 +1,9 @@
 import uuid
 from enum import Enum
 
-from sqlalchemy import Column, DateTime, ForeignKey, MetaData, String, Table
+from sqlalchemy import Column, DateTime
 from sqlalchemy import Enum as SQLAlchemyEnum
+from sqlalchemy import ForeignKey, MetaData, String, Table
 from sqlalchemy.dialects.postgresql import UUID
 
 from hrms_back.models.models import user
