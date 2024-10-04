@@ -39,7 +39,7 @@ include = ["hrms_back*"]
 
 [tool.black]
 line-length = 120
-extend-exclude = "E203, W503, venv"
+extend-exclude = "E203, W503, venv, hrms_back/migrations"
 
 [tool.isort]
 profile = "black"
