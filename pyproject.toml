@@ -75,9 +75,9 @@ isolated_build = True
 deps =
     .[dev]
 commands =
-    pylint -E hrms_back
-    flake8 hrms_back
-    black --check --diff hrms_back
-    isort --check --diff hrms_back
-    pydocstyle hrms_back
+    pylint -E hrms_back --ignore=migrations
+    flake8 hrms_back --exclude=migrations
+    black --check --diff hrms_back --extend-exclude=migrations
+    isort --check --diff hrms_back --skip=migrations
+    pydocstyle hrms_back --match-dir="(?!migrations)[^\.].*"
 """
