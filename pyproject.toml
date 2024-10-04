@@ -79,5 +79,5 @@ commands =
     flake8 hrms_back --exclude=migrations
     black --check --diff hrms_back --extend-exclude=migrations
     isort --check --diff hrms_back --skip=migrations
-    pydocstyle hrms_back --match-dir="(?!migrations)[^\.].*"
+    pydocstyle hrms_back --match-dir="(?!migrations)[^\\.].*"
 """
