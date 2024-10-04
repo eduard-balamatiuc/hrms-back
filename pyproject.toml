@@ -39,26 +39,28 @@ include = ["hrms_back*"]
 
 [tool.black]
 line-length = 120
-extend-exclude = "E203, W503, venv"
+extend-exclude = "E203, W503, venv, src/hrms_back/migrations"
 
 [tool.isort]
 profile = "black"
 line_length = 120
+skip = ["src/migrations"]
 
 [tool.pydocstyle]
 convention = "google"
 add-ignore = ["D100", "D104", "D205", "D101", "D415"]
 match = "(?!test_).*\\.py"
+match-dir = "(?!migrations)[^\\.].*"
 
 [tool.pylint]
-ignore = "CVS"
+ignore = "CVS, migrations"
 ignore-patterns = "test_.*?py"
 max-line-length = 120
 extension-pkg-whitelist = "pydantic"
 
 [tool.flake8]
 max-line-length = 120
-exclude = ".tox,*.egg,build,data,venv"
+exclude = ".tox,*.egg,build,data,venv, src/hrms_back/migrations"
 select = "E,W,F"
 per-file-ignores = "__init__.py:F401"
 ignore = "E203,W503"
@@ -73,9 +75,9 @@ isolated_build = True
 deps =
     .[dev]
 commands =
-    pylint -E hrms_back
-    flake8 hrms_back
-    black --check --diff hrms_back
-    isort --check --diff hrms_back
-    pydocstyle hrms_back
+    pylint -E hrms_back --ignore=migrations
+    flake8 hrms_back --exclude=migrations
+    black --check --diff hrms_back --extend-exclude=migrations
+    isort --check --diff hrms_back --skip=migrations
+    pydocstyle hrms_back --match-dir="(?!migrations)[^\\.].*"
 """

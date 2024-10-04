@@ -4,11 +4,19 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from hrms_back.auth.config import ADMIN, DOCTOR, PATIENT
+
 
 class UserRole(str, Enum):
-    PATIENT = "patient"
-    DOCTOR = "doctor"
-    ADMIN = "admin"
+    PATIENT = PATIENT
+    DOCTOR = DOCTOR
+    ADMIN = ADMIN
+
+
+class Status(str, Enum):
+    pending = "pending"
+    accepted = "accepted"
+    rejected = "rejected"
 
 
 class User(BaseModel):
@@ -41,7 +49,7 @@ class Gender(str, Enum):
 
 
 class GeneralLInformation(BaseModel):
-    patient_user_id: str = Field(nullable=False)
+    user_id: str = Field(nullable=False)
     height: int
     weight: float
     blood_type: BloodType
@@ -50,8 +58,9 @@ class GeneralLInformation(BaseModel):
 
 
 class Appointment(BaseModel):
-    patient_user_id: str = Field(nullable=False)
+    user_id: str = Field(nullable=False)
     doctor_user_id: str = Field(nullable=False)
     start_time: datetime
     end_time: Optional[datetime] = None
     comments: str = Field(nullable=False)
+    status: Status

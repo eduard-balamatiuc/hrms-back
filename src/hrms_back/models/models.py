@@ -6,13 +6,21 @@ from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy import ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.dialects.postgresql import UUID
 
+from hrms_back.auth.config import ADMIN, DOCTOR, PATIENT
+
 metadata = MetaData()
 
 
 class UserRole(str, Enum):
-    patient = "patient"
-    doctor = "doctor"
-    admin = "admin"
+    patient = PATIENT
+    doctor = DOCTOR
+    admin = ADMIN
+
+
+class Status(str, Enum):
+    pending = "pending"
+    accepted = "accepted"
+    rejected = "rejected"
 
 
 user = Table(
@@ -54,4 +62,5 @@ appointment = Table(
     Column("start_time", DateTime),
     Column("end_time", DateTime),
     Column("comments", String),
+    Column("status", SQLAlchemyEnum(Status), nullable=False),
 )
