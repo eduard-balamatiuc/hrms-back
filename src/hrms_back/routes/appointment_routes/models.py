@@ -1,5 +1,4 @@
 import uuid
-from enum import Enum
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy import Enum as SQLAlchemyEnum
